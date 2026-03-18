@@ -35,13 +35,15 @@ dotnet test
 
 ```zsh
 src/
-  QuizTest/
+  QuizTest.Core/
     Contracts/       # Interfaces (IQuizApiClient, IQuizUi, IAnswerShuffler)
     Domain/          # Domain models (QuizQuestion, QuizCategory)
     Integrations/    # OpenTrivia API response models
-    Services/        # Game logic and UI implementation
-    Program.cs       # Entry point and DI setup
+    Services/        # Core game logic and answer shuffling
     QuizApiClient.cs # HTTP client for Open Trivia API
+  QuizTest/
+    Services/        # UI implementation (Spectre.Console)
+    Program.cs       # Entry point and DI composition
 tests/
   QuizTest.Tests/    # xUnit tests with Moq
 ```
