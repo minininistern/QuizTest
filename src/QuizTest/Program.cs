@@ -1,23 +1,13 @@
-﻿using QuizTest;
-using QuizTest.Contracts;
-using QuizTest.Services;
+﻿using QuizTest.Core.DependencyInjection;
+using QuizTest.Core.Contracts;
+using QuizTest.Core.Services;
+using QuizTest.Ui.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
 
-services.AddSingleton<IQuizApiClient>(_ =>
-{
-	var httpClient = new HttpClient
-	{
-		BaseAddress = new Uri("https://opentdb.com"),
-		Timeout = TimeSpan.FromSeconds(30)
-	};
-
-	return new QuizApiClient(httpClient);
-});
+services.AddQuizCore();
 services.AddSingleton<IQuizUi, SpectreQuizUi>();
-services.AddSingleton<IAnswerShuffler, RandomAnswerShuffler>();
-services.AddTransient<QuizGame>();
 
 using var serviceProvider = services.BuildServiceProvider();
 var quizGame = serviceProvider.GetRequiredService<QuizGame>();

@@ -1,4 +1,4 @@
-namespace QuizTest.Domain;
+namespace QuizTest.Core.Domain;
 
 /// <summary>
 /// Represents a single quiz question with its associated metadata and answers.

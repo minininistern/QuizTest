@@ -1,9 +1,9 @@
 using System.Net.Http.Json;
-using QuizTest.Contracts;
-using QuizTest.Domain;
-using QuizTest.Integrations.OpenTrivia;
+using QuizTest.Core.Contracts;
+using QuizTest.Core.Domain;
+using QuizTest.Core.Integrations.OpenTrivia;
 
-namespace QuizTest;
+namespace QuizTest.Core;
 
 public sealed class QuizApiClient(HttpClient httpClient) : IQuizApiClient, IDisposable
 {
