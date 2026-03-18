@@ -1,6 +1,6 @@
-using QuizTest.Domain;
+using QuizTest.Core.Domain;
 
-namespace QuizTest.Contracts;
+namespace QuizTest.Core.Contracts;
 
 /// <summary>
 /// Defines the contract for accessing quiz data from a remote API.

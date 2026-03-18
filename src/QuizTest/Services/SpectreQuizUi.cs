@@ -1,8 +1,8 @@
-using QuizTest.Contracts;
-using QuizTest.Domain;
+using QuizTest.Core.Contracts;
+using QuizTest.Core.Domain;
 using Spectre.Console;
 
-namespace QuizTest.Services;
+namespace QuizTest.Ui.Services;
 
 public sealed class SpectreQuizUi : IQuizUi
 {

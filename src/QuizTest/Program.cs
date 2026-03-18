@@ -1,6 +1,7 @@
-﻿using QuizTest;
-using QuizTest.Contracts;
-using QuizTest.Services;
+﻿using QuizTest.Core;
+using QuizTest.Core.Contracts;
+using QuizTest.Core.Services;
+using QuizTest.Ui.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();

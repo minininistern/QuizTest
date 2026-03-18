@@ -1,6 +1,6 @@
-using QuizTest.Contracts;
+using QuizTest.Core.Contracts;
 
-namespace QuizTest.Services;
+namespace QuizTest.Core.Services;
 
 public sealed class QuizGame(IQuizApiClient apiClient, IQuizUi ui, IAnswerShuffler answerShuffler)
 {
