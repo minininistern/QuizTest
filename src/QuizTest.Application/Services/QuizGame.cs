@@ -32,13 +32,14 @@ public sealed class QuizGame(IQuizApiClient apiClient, IQuizUi ui, IAnswerShuffl
         var difficulty = _ui.PromptDifficulty();
         var questionCount = _ui.PromptQuestionCount();
 
-        var categories = await _ui.FetchCategoriesAsync(
+        var categories = await _ui.WithStatusAsync(
+            "Fetching categories...",
             () => _apiClient.GetCategoriesAsync(cancellationToken));
 
         var selectedCategory = _ui.PromptCategory(categories);
 
-        var questions = await _ui.FetchQuestionsAsync(
-            questionCount,
+        var questions = await _ui.WithStatusAsync(
+            $"Fetching {questionCount} questions from API...",
             () => _apiClient.GetQuestionsAsync(questionCount, difficulty, selectedCategory?.Id, cancellationToken));
 
         var correctAnswerCount = 0;

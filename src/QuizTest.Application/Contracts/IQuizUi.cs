@@ -32,19 +32,13 @@ public interface IQuizUi
     QuizCategory? PromptCategory(List<QuizCategory> categories);
 
     /// <summary>
-    /// Fetches quiz categories while displaying a loading status.
+    /// Displays a loading indicator while asynchronous work executes.
     /// </summary>
-    /// <param name="action">The asynchronous action that retrieves the categories.</param>
-    /// <returns>A task that returns the list of available quiz categories.</returns>
-    Task<List<QuizCategory>> FetchCategoriesAsync(Func<Task<List<QuizCategory>>> action);
-
-    /// <summary>
-    /// Fetches quiz questions while displaying a loading status.
-    /// </summary>
-    /// <param name="questionCount">The number of questions being fetched, used in the loading message.</param>
-    /// <param name="action">The asynchronous action that retrieves the questions.</param>
-    /// <returns>A task that returns the list of quiz questions.</returns>
-    Task<List<QuizQuestion>> FetchQuestionsAsync(int questionCount, Func<Task<List<QuizQuestion>>> action);
+    /// <typeparam name="T">The type of the result produced by the work.</typeparam>
+    /// <param name="message">The status message to display during loading.</param>
+    /// <param name="work">The asynchronous work to execute.</param>
+    /// <returns>A task that returns the result of the work.</returns>
+    Task<T> WithStatusAsync<T>(string message, Func<Task<T>> work);
 
     /// <summary>
     /// Displays a quiz question and prompts the user to select an answer.

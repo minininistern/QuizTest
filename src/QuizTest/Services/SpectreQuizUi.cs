@@ -72,30 +72,18 @@ public sealed class SpectreQuizUi : IQuizUi
     }
 
     /// <summary>
-    /// Fetches quiz categories while displaying a dots loading spinner.
+    /// Displays a loading spinner while asynchronous work executes.
     /// </summary>
-    /// <param name="action">The asynchronous action that retrieves the categories.</param>
-    /// <returns>A task that returns the list of available quiz categories.</returns>
-    public Task<List<QuizCategory>> FetchCategoriesAsync(Func<Task<List<QuizCategory>>> action)
+    /// <typeparam name="T">The type of the result produced by the work.</typeparam>
+    /// <param name="message">The status message to display during loading.</param>
+    /// <param name="work">The asynchronous work to execute.</param>
+    /// <returns>A task that returns the result of the work.</returns>
+    public Task<T> WithStatusAsync<T>(string message, Func<Task<T>> work)
     {
         return AnsiConsole.Status()
             .Spinner(Spinner.Known.Dots)
             .SpinnerStyle(Style.Parse("cadetblue"))
-            .StartAsync("[grey]Fetching categories...[/]", _ => action());
-    }
-
-    /// <summary>
-    /// Fetches quiz questions while displaying a star loading spinner.
-    /// </summary>
-    /// <param name="questionCount">The number of questions being fetched, used in the loading message.</param>
-    /// <param name="action">The asynchronous action that retrieves the questions.</param>
-    /// <returns>A task that returns the list of quiz questions.</returns>
-    public Task<List<QuizQuestion>> FetchQuestionsAsync(int questionCount, Func<Task<List<QuizQuestion>>> action)
-    {
-        return AnsiConsole.Status()
-            .Spinner(Spinner.Known.Star)
-            .SpinnerStyle(Style.Parse("deepskyblue1"))
-            .StartAsync($"[grey]Fetching {questionCount} questions from API...[/]", _ => action());
+            .StartAsync($"[grey]{Markup.Escape(message)}[/]", _ => work());
     }
 
     /// <summary>
