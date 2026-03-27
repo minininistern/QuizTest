@@ -1,4 +1,4 @@
-namespace QuizTest.Domain;
+namespace QuizTest.Domain.Quiz;
 
 /// <summary>
 /// Represents the difficulty level of a quiz question.
