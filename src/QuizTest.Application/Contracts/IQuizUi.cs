@@ -15,8 +15,8 @@ public interface IQuizUi
     /// <summary>
     /// Prompts the user to select a difficulty level.
     /// </summary>
-    /// <returns>The selected difficulty level as a string.</returns>
-    string PromptDifficulty();
+    /// <returns>The selected difficulty level.</returns>
+    Difficulty PromptDifficulty();
 
     /// <summary>
     /// Prompts the user to select the number of questions.

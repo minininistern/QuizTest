@@ -18,11 +18,12 @@ public sealed class QuizApiClient(HttpClient httpClient) : IQuizApiClient
     /// <exception cref="InvalidOperationException">Thrown if the API returns an error response.</exception>
     public async Task<List<QuizQuestion>> GetQuestionsAsync(
         int amount = 10,
-        string difficulty = "medium",
+        Difficulty difficulty = Difficulty.Medium,
         int? categoryId = null,
         CancellationToken cancellationToken = default)
     {
-        var url = $"api.php?amount={amount}&difficulty={difficulty}&type=multiple";
+        var difficultyStr = difficulty.ToString().ToLowerInvariant();
+        var url = $"api.php?amount={amount}&difficulty={difficultyStr}&type=multiple";
         if (categoryId.HasValue)
             url += $"&category={categoryId.Value}";
 
@@ -37,7 +38,7 @@ public sealed class QuizApiClient(HttpClient httpClient) : IQuizApiClient
         return [.. result.Results
             .Select(q => new QuizQuestion(
                 q.Type,
-                q.Difficulty,
+                Enum.Parse<Difficulty>(q.Difficulty, ignoreCase: true),
                 q.Category,
                 q.Question,
                 q.CorrectAnswer,

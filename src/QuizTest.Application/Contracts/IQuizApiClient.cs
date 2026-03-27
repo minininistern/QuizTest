@@ -17,7 +17,7 @@ public interface IQuizApiClient
     /// <returns>A task that returns a list of quiz questions.</returns>
     Task<List<QuizQuestion>> GetQuestionsAsync(
         int amount = 10,
-        string difficulty = "medium",
+        Difficulty difficulty = Difficulty.Medium,
         int? categoryId = null,
         CancellationToken cancellationToken = default);
 

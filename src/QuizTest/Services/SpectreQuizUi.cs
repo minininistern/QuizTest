@@ -26,14 +26,14 @@ public sealed class SpectreQuizUi : IQuizUi
     /// <summary>
     /// Prompts the user to select a difficulty level.
     /// </summary>
-    /// <returns>The selected difficulty as a string: "easy", "medium", or "hard".</returns>
-    public string PromptDifficulty()
+    /// <returns>The selected difficulty level.</returns>
+    public Difficulty PromptDifficulty()
     {
         return AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
+            new SelectionPrompt<Difficulty>()
                 .Title("[bold]Select difficulty:[/]")
                 .PageSize(3)
-                .AddChoices(["easy", "medium", "hard"]));
+                .AddChoices([Difficulty.Easy, Difficulty.Medium, Difficulty.Hard]));
     }
 
     /// <summary>
