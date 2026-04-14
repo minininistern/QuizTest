@@ -1,6 +1,13 @@
 using QuizTest.Application.Contracts;
 using QuizTest.Domain.Quiz;
 using Spectre.Console;
+using Panel = Spectre.Console.Panel;
+using Table = Spectre.Console.Table;
+using Rule = Spectre.Console.Rule;
+using FigletText = Spectre.Console.FigletText;
+using Color = Spectre.Console.Color;
+// progress column types are available in Spectre.Console namespace
+using System.Threading;
 
 namespace QuizTest.Ui.Services;
 
@@ -145,12 +152,6 @@ public sealed class SpectreQuizUi : IQuizUi
         AnsiConsole.Progress()
             .AutoClear(true)
             .HideCompleted(true)
-            .Columns(
-            [
-                new TaskDescriptionColumn(),
-                new ProgressBarColumn(),
-                new PercentageColumn()
-            ])
             .Start(ctx =>
             {
                 var task = ctx.AddTask($"[grey]Progress {answeredCount}/{totalCount} - loading next question[/]", maxValue: 100);

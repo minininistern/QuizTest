@@ -1,4 +1,5 @@
 using QuizTest.Application.Contracts;
+using System.Text.Json;
 
 namespace QuizTest.Application.Services;
 
@@ -44,6 +45,33 @@ public sealed class QuizGame(IQuizApiClient apiClient, IQuizUi ui, IAnswerShuffl
 
         var correctAnswerCount = 0;
 
+        // Prepare data directory and files for logging
+        var dataDir = Path.Combine(AppContext.BaseDirectory, "quiz_data");
+        Directory.CreateDirectory(dataDir);
+        var questionLogPath = Path.Combine(dataDir, "question_log.jsonl");
+        var lastQuestionPath = Path.Combine(dataDir, "last_question.json");
+        var resultsLogPath = Path.Combine(dataDir, "results_log.jsonl");
+
+        var jsonOptions = new JsonSerializerOptions { WriteIndented = false };
+
+        // Save the last fetched questions batch (without answers) for reference
+        try
+        {
+            var batchInfo = new
+            {
+                FetchedAt = DateTime.UtcNow,
+                Difficulty = difficulty,
+                Category = selectedCategory?.Id,
+                Questions = questions.Select(q => new { q.Question, q.Category, q.Difficulty }).ToList()
+            };
+
+            File.WriteAllText(lastQuestionPath, JsonSerializer.Serialize(batchInfo, new JsonSerializerOptions { WriteIndented = true }));
+        }
+        catch
+        {
+            // Ignore file errors to avoid crashing the quiz
+        }
+
         for (var i = 0; i < questions.Count; i++)
         {
             var question = questions[i];
@@ -64,10 +92,54 @@ public sealed class QuizGame(IQuizApiClient apiClient, IQuizUi ui, IAnswerShuffl
  
             _ui.ShowAnswerResult(isCorrect, decodedCorrectAnswer);
 
+            // Log this answered question (append as JSON line)
+            try
+            {
+                var logEntry = new
+                {
+                    Timestamp = DateTime.UtcNow,
+                    Question = System.Net.WebUtility.HtmlDecode(question.Question),
+                    Category = System.Net.WebUtility.HtmlDecode(question.Category),
+                    Difficulty = question.Difficulty,
+                    Answers = decodedAnswers,
+                    CorrectAnswer = decodedCorrectAnswer,
+                    SelectedAnswer = selectedAnswer,
+                    IsCorrect = isCorrect
+                };
+
+                var line = JsonSerializer.Serialize(logEntry, jsonOptions) + Environment.NewLine;
+                File.AppendAllText(questionLogPath, line);
+            }
+            catch
+            {
+                // Swallow file IO exceptions to keep the game running
+            }
+
             if (i < questions.Count - 1)
                 _ui.ShowInterQuestionProgress(i + 1, questions.Count);
         }
 
         _ui.ShowFinalResults(correctAnswerCount, questions.Count);
+
+        // Append a result summary to results log
+        try
+        {
+            var resultEntry = new
+            {
+                Timestamp = DateTime.UtcNow,
+                Total = questions.Count,
+                Correct = correctAnswerCount,
+                Percentage = questions.Count > 0 ? (double)correctAnswerCount / questions.Count * 100 : 0,
+                Difficulty = difficulty,
+                Category = selectedCategory?.Id
+            };
+
+            var line = JsonSerializer.Serialize(resultEntry, jsonOptions) + Environment.NewLine;
+            File.AppendAllText(resultsLogPath, line);
+        }
+        catch
+        {
+            // Ignore
+        }
     }
 }
